@@ -211,13 +211,4 @@ todo.add('сгонять на рыбалку');
 
 // getAll вернуть полную копию массива this._data JSON  JavaScript deepCopy()
 
-function setData(key) {
-    this._key = key;
-    if (typeof this._key !== "string") {
-        this._key = this._key.toString();
-    }
-    console.log(this._key, typeof this._key);
-}
-
-setData(true);
 
