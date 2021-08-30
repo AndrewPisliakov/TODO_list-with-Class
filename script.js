@@ -6,16 +6,16 @@ class Todo {
 
         /*        let todo = new Todo();
                 let todo = {
-                    data: [],
-                    readonly: false,
+                    _data: [],
+                    _readonly: false,
                     add(text) {
                         this._data === todo.data;
                     }
                 }
                 let todo2 = new Todo();
                 let todo2 = {
-                    data: [],
-                    readonly: false,  
+                    _data: [],
+                    _readonly: false,  
                     add(text) {
                         this._data === todo2.data;
                     }
@@ -175,6 +175,27 @@ class Todo {
 }
 
 
+class Storage {
+    constructor(key) {
+        this._key = key;
+    }
+
+    setData(data) {
+        if (typeof this._key !== "string") {
+            this._key = this._key.toString();
+        }
+        localStorage.setItem(this._key, JSON.stringify(data));
+    }
+
+    getData() {
+        return JSON.parse(localStorage.getItem(this._key));
+    }
+};
+
+
+
+
+
 /* let todo = new Todo();
 todo.add('попить воды');
 todo.add('помыть посуду');
@@ -189,3 +210,14 @@ todo.add('сгонять на рыбалку');
 
 
 // getAll вернуть полную копию массива this._data JSON  JavaScript deepCopy()
+
+function setData(key) {
+    this._key = key;
+    if (typeof this._key !== "string") {
+        this._key = this._key.toString();
+    }
+    console.log(this._key, typeof this._key);
+}
+
+setData(true);
+
