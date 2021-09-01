@@ -8,6 +8,10 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -89,6 +93,7 @@ body {
     letter-spacing: -.015rem;
     will-change: transform;
   }
+
   #tags #tagsList li:hover {
     border-right: 55px solid red;
     transition: all 0.3s ease-in-out;
@@ -96,6 +101,13 @@ body {
     z-index: 20;
     box-shadow: 0 20px 30px 0 rgba(1, 1, 1, 0.2);
   }
+  #tags #tagsList li > .close-dagger {
+    float: right;
+    position: relative;
+    color: gray;
+  }
+
+
   #tags #tagsList li:hover .delete {
     right: -37px;
     color: white;
