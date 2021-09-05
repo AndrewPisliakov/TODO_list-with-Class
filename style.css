@@ -34,7 +34,7 @@ button {
     /* text-transform: uppercase; */
     box-shadow: 0 -10px 10px 0 rgba(1, 1, 1, 0.05);
   }
-  .header #tagAdd {
+  .header .tag-add {
     transition: all 0.3s ease-in-out;
     width: 3rem;
     height: 3rem;
@@ -48,14 +48,14 @@ button {
     outline: 0;
     will-change: transform;
   }
-  .header #tagAdd:hover {
+  .header .tag-add:hover {
     background: #050fe5;
     transform: scale(0.95);
   }
-  .header #tagAdd:active {
+  .header .tag-add:active {
      transform: scale(0.9);
   }
-  .header input#tagInput {
+  .header input.tag-input {
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
     font-size: 1rem;
@@ -63,20 +63,20 @@ button {
     width: calc(100% - 3rem - 5px);
     border: none;
   }
-  .header input#tagInput:focus {
+  .header input.tag-input:focus {
     outline: 0;
     border-color: white;
     color: #0d0d0d;
   }
   
-  #tags {
+  .tags {
     padding: 1.5rem 2rem;
   }
-  #tags #tagsList {
+  .tags .tags-list {
     list-style-type: none;
     padding-left: 0;
   }
-  #tags #tagsList li {
+  .tags .tags-list li {
     transition: all 0.3s ease-in-out;
     box-shadow: 0 20px 30px 0 rgba(1, 1, 1, 0.07);
     border-radius: 0.75rem;
@@ -94,25 +94,25 @@ button {
     will-change: transform;
   }
 
-  #tags #tagsList li:hover {
+  .tags .tags-list li:hover {
     border-right: 55px solid red;
     transition: all 0.3s ease-in-out;
     transform: scale(1.05);
     z-index: 20;
     box-shadow: 0 20px 30px 0 rgba(1, 1, 1, 0.2);
   }
-  #tags #tagsList li > .close-dagger {
+  .tags .tags-list li > .close-dagger {
     float: right;
     position: relative;
     color: gray;
   }
 
 
-  #tags #tagsList li:hover .delete {
+  .tags .tags-list li:hover .delete {
     right: -37px;
     color: white;
   }
-  #tags #tagsList li .delete {
+  .tags .tags-list li .delete {
     transition: all 0.30s ease-in-out;
     position: absolute;
     color: transparent;
@@ -122,10 +122,10 @@ button {
     line-height: .85rem;
     font-size: 1rem;
   }
-  #tags #tagsList li .delete:hover {
+  .tags .tags-list li .delete:hover {
     opacity: .75;
   }
-  #tags #notification {
+  .tags .notification {
     padding-top: 1rem;
     text-align: center;
     color: gray;

@@ -120,14 +120,14 @@ class Todo {
     }
 
     getAllItems() {   //      --ГОТОВО--
-        return JSON.parse(JSON.stringify(this._data));
+        return JSON.parse(JSON.stringify(this._data)); // разрываем ссылку на наш объект
     }
 
     isReadonly() {
         return this._readonly;
     }
 
-    makeReadonly() { // только для чтения       --ГОТОВО--
+    makeReadonly() { // только для чтения    
         this._readonly = true;
 
         this._triggerEvent('change');
@@ -162,7 +162,7 @@ class Todo {
             this._triggerEvent('change');
         }
 
-        
+
 
         console.log(this._data);
     }
@@ -171,7 +171,7 @@ class Todo {
         let result = this._data.find(elem => elem.id == id);
 
         result.completed = true;
-       
+
         this._triggerEvent('change');
 
         console.log(this._data);
@@ -181,7 +181,7 @@ class Todo {
         let result = this._data.find(elem => elem.id == id);
 
         result.completed = false;
-        
+
         this._triggerEvent('change');
 
         console.log(this._data);
@@ -230,7 +230,7 @@ class Storage {
 
 
 class View {
-    constructor(todo) {
+    constructor(todo) {   // сюда отправляем new Todo(); наш общей объект, текущий объект со всеми свойствами и методами
         this._todo = todo;
         this._htmlElement = document.createElement('div');
         this._htmlElement.id = Date.now();
@@ -241,23 +241,28 @@ class View {
 
     /*     view {
             _todo : {
-                []
+                _data: []
+                _readonly : boolean,
+                addItem(text),
+                removeItem(), 
             },
+            
             _htmlElement : ...;
             _htmlElement.id: ..;,
     
             initialize()
         } */
 
-    initialize() {
+    initialize() {                                            // дейсвие по запуску отрисовки  START 
         this._todo.addEventListener('change', this._render);    // каждый раз получаем уведомление //todo.addEventListener();
         document.body.append(this._htmlElement);            // initialize() вызывается один раз и поэтому пишем его сюда. 
-        
+
         this._render();
+
     }
 
     destroy() {
-        this._todo.removeEventListener('change', this._render);
+        this._todo.removeEventListener('change', this._render);  // действие по остановки отрисовки STOP
         this._htmlElement.remove();
     }
 
@@ -271,14 +276,14 @@ class View {
         html += `
         <div class="container">
             <div class="header">                                          
-                <input type="text" ${todoItemsReadonly ? 'disabled' : ''} id="tagInput_${this._htmlElement.id}" placeholder="Your tagName"> 
-                <button id="tagAdd_${this._htmlElement.id}" ${todoItemsReadonly ? 'disabled' : ''}>+</button>
+                <input type="text" id="tagInput_${this._htmlElement.id}" class="tag-input" ${todoItemsReadonly ? 'disabled' : ''} placeholder="Your tag name"> 
+                <button id="tagAdd_${this._htmlElement.id}" class="tag-add" ${todoItemsReadonly ? 'disabled' : ''}>+</button>
             </div>
-            <div id="tags">
-                <div id="notification_${this._htmlElement.id}">Tag list</div>
-                <ul id="tagsList_${this._htmlElement.id}" class="tagList">`             /* добавить классы!!! и SCC */
+            <div class="tags">
+                <span class="notification">Tag list</span>
+                <ul id="tagsList_${this._htmlElement.id}" class="tags-list">`             /* добавить классы!!! и SCC */
         for (let todoItem of todoItems) {
-            html += `<li> ${todoItem.text} <button class="close-dagger delete" ${todoItemsReadonly || todoItem.readonly ? 'disabled' : ''}>&#10006</button></li>`
+            html += `<li id="tagItem_${todoItem.id}"> ${todoItem.text} <button class="close-dagger delete" ${todoItemsReadonly || todoItem.readonly ? 'disabled' : ''}>&#10006</button></li>`
         }
         html += `</ul> 
             </div>
@@ -289,13 +294,41 @@ class View {
         this._subscribeOnUserAction();
     }
 
-    _subscribeOnUserAction() {}  // сюда внести все слушатели событий кнопок инпутов ... 
+    _subscribeOnUserAction() {
+        let todoItems = this._todo.getAllItems();
+        let button = document.getElementById(`tagAdd_${this._htmlElement.id}`);
+        let input = document.getElementById(`tagInput_${this._htmlElement.id}`);
+        let that = this;
+
+
+        button.addEventListener('click', function () {
+            let inputText = input.value;   //document.querySelector('.tag-input').value;
+
+            let arr = inputText.split(',');
+
+            arr.forEach(elem => {
+                that._todo.addItem(elem);
+            });
+
+        });
+
+
+
+        todoItems.forEach(todoItem => {
+            let li = document.getElementById(`tagItem_${todoItem.id}`);
+            let closeButton = li.querySelector('button.close-dagger.delete');
+
+            closeButton.addEventListener('click', function () {
+                that._todo.deleteItem(todoItem.id);    // тут this будет кнопка-крестик, a нам надо todo через that
+            });
+
+        });
+
+
+
+    }  // сюда внести все слушатели событий кнопок инпутов ... 
 
 };
-
-let tagInput = document.querySelector('#tagInput');
-let addButton = document.querySelector('#tagAdd');
-let tagsList = document.querySelector('#tagsList');
 
 
 
@@ -315,3 +348,13 @@ todo.add('сгонять на рыбалку');
 // getAll вернуть полную копию массива this._data JSON  JavaScript deepCopy()
 
 
+let todo = new Todo();
+let view = new View(todo);
+view.initialize();
+//todo.addItem('');
+
+
+// добавить код который подписывается на собыите change модели (todo) и записывает данные в объект класса Storage(); 
+
+// идея: каждый раз когда меняется состояние модели всплывает собыите change нашей модли, в этот момент записываем
+// обновленне состояние в storage таким образом в storage будут поподать актуальные данные
