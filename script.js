@@ -189,6 +189,7 @@ class Todo {
 
     addEventListener(eventName, func) {
         window.addEventListener(`model: ${eventName}`, func);
+
     }
 
     removeEventListener(eventName, func) {
@@ -203,10 +204,7 @@ class Todo {
         let result = this._data.find(elem => elem.id == id);
         console.log(result);
     }
-
-
 }
-
 
 class Storage {
     constructor(key) {
@@ -219,15 +217,13 @@ class Storage {
 
     setData(data) {
 
-        localStorage.setItem(this._key, JSON.stringify(data));
+        localStorage.setItem(this._key, JSON.stringify(data))
     }
 
     getData() {
-        return JSON.parse(localStorage.getItem(this._key));
+        return JSON.parse(localStorage.getItem(this._key))
     }
-};
-
-
+}
 
 class View {
     constructor(todo) {   // сюда отправляем new Todo(); наш общей объект, текущий объект со всеми свойствами и методами
@@ -298,11 +294,14 @@ class View {
         let todoItems = this._todo.getAllItems();
         let button = document.getElementById(`tagAdd_${this._htmlElement.id}`);
         let input = document.getElementById(`tagInput_${this._htmlElement.id}`);
+
         let that = this;
 
 
         button.addEventListener('click', function () {
             let inputText = input.value;   //document.querySelector('.tag-input').value;
+
+            if (!inputText) return;
 
             let arr = inputText.split(',');
 
@@ -312,46 +311,83 @@ class View {
 
         });
 
-
+        // почеу не прячем перебор внутрь 'click'? возникает событие, перебираем выполняем действие? 
 
         todoItems.forEach(todoItem => {
             let li = document.getElementById(`tagItem_${todoItem.id}`);
             let closeButton = li.querySelector('button.close-dagger.delete');
 
             closeButton.addEventListener('click', function () {
+
                 that._todo.deleteItem(todoItem.id);    // тут this будет кнопка-крестик, a нам надо todo через that
             });
-
         });
 
+        input.addEventListener('keydown', function (event) {
 
+            let inputText = input.value;   //document.querySelector('.tag-input').value;
 
+            if (!inputText) return;
+
+            if (event.keyCode === 13) {
+                let arr = inputText.split(',');
+
+                if (arr.length > 0) {
+                    arr.forEach(elem => {
+                        that._todo.addItem(elem);
+                    });
+                }
+            }
+        });
     }  // сюда внести все слушатели событий кнопок инпутов ... 
-
 };
 
 
+let storage = new Storage('todoStorage');
 
-/* let todo = new Todo();
-todo.add('попить воды');
-todo.add('помыть посуду');
-todo.add('нарезать салат');
-todo.add('сгонять на рыбалку');
+let objStorage = storage.getData();
 
+let data = objStorage?.data;
+
+let todo = new Todo(data);
+//todo.isReadonly() = objStorage.readonly;   // 
+
+let view = new View(todo);
+view.initialize();
+
+todo.addEventListener('change', function () {
+
+    let objForStorage = {
+    data : todo.getAllItems(),
+    readonly : todo.isReadonly(),
+    };
+    
+    storage.setData(objForStorage);
+});
+
+
+
+
+
+
+/*
+let objForStorage = {
+    data: todo.getAllItems(),
+    readonly: todo.isReadonly()
+};
+//console.log(objForStorage.data);
+
+todo.addEventListener('change', function () {
+    storage.setData(objForStorage);
+});
+
+
+console.log(objStorage);
+console.log(todo.getAllItems());
+//console.log(storage.getData());
  */
 
 
-//todo.state();
-
-
-
-// getAll вернуть полную копию массива this._data JSON  JavaScript deepCopy()
-
-
-let todo = new Todo();
-let view = new View(todo);
-view.initialize();
-//todo.addItem('');
 
 
 // добавить код который подписывается на собыите change модели (todo) и записывает данные в объект класса Storage(); 
